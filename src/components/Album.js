@@ -6,4 +6,4 @@ const Album = () => (
     </section>
 );
 
-export default Landing;
+export default Album;
