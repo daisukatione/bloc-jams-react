@@ -15,7 +15,6 @@ class App extends Component {
           <nav>
             <Link to='/'>Landing</Link>
             <Link to='/library/'>Library</Link>
-            <Link to='/album/something/'>Album</Link>
           </nav>
         </header>
         <main>
