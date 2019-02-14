@@ -11,22 +11,15 @@ class Album extends Component {
 
         this.state = {
             album: album,
-            currentSong: album.songs[0],
+            currentSong: null,
             isPlaying: false,
-            hoverIcon: "",
-        }
-
+            hoveredSong: null
+        };
+        
         this.audioElement = document.createElement('audio');
         this.audioElement.src = album.songs[0].audioSrc;
         }
-
-  onEnter(index) {
-      this.setState({hoverIcon: index})
-  }
-
-  onLeave(index) {
-      this.setState({hoverIcon: ""})
-  }
+  
 
   play() {
       this.audioElement.play();
@@ -36,6 +29,7 @@ class Album extends Component {
   pause() {
       this.audioElement.pause();
       this.setState({ isPlaying: false });
+      this.setState({ currentSong: null });
   }
   
   setSong(song) {
@@ -52,6 +46,38 @@ class Album extends Component {
           this.play();
       }
 
+  }
+
+  handleOnMouseEnter(song) {
+    this.setState({hoveredSong: song});
+  }
+
+  handleOnMouseLeave(song) {
+    this.setState({hoveredSong: null});
+  }
+
+  getTrackIcon(song, index) {
+    const play = <span className="ion-md-play"></span>;
+    const pause = <span className="ion-md-pause"></span>;
+    const isHovering = song === this.state.hoveredSong;
+    const isCurrentSong = song === this.state.currentSong;
+    const isCurrentSongPlaying = song === this.state.currentSong && this.state.isPlaying;
+
+    if (isHovering) {
+      if (isCurrentSongPlaying) {
+        return pause;
+      } else {
+        return play;
+      }
+    } else {
+      if (isCurrentSongPlaying) {
+        return pause;
+      } else if (isCurrentSong) {
+        return play;
+      } else {
+        return index + 1;
+      }
+    }
   }
 
   render() {
@@ -72,16 +98,16 @@ class Album extends Component {
              <col id="song-duration-column" />
            </colgroup>  
            <tbody>
-                <tr>
-                   <th>Song #</th>
-                   <th>Title</th>
-                   <th>Duration</th>
-               </tr>
                {
-                   this.state.album.songs.map(
-                       (song, index) => 
-                <tr className='song' key={index} onClick={() => this.handleSongClick(song)} onMouseEnter={ () => this.onEnter(index)}>
-                    <td><span className={this.state.hoverIcon == index ? 'icon ion-md-play' : 'icon ion-md-pause'} /></td>
+                   this.state.album.songs.map( (song, index) =>
+                <tr 
+                className="song"
+                key={index}
+                onClick={() => this.handleSongClick(song)}
+                onMouseEnter={() => this.handleOnMouseEnter(song)} 
+                onMouseLeave={() => this.handleOnMouseLeave(song)}
+                > 
+                    <td>{this.getTrackIcon(song, index)}</td>
                     <td>{song.title}</td>
                     <td>{song.duration}</td>
                 </tr>
