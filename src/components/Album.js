@@ -13,14 +13,41 @@ class Album extends Component {
         this.state = {
             album: album,
             currentSong: null,
+            currentTime: 0,
+            volume: 0.5,
+            duration: album.songs[0].duration,
             isPlaying: false,
             hoveredSong: null
         };
         
         this.audioElement = document.createElement('audio');
         this.audioElement.src = album.songs[0].audioSrc;
+        this.audioElement.volume = this.state.volume;
         }
   
+　componentDidMount() {
+    this.eventListeners = {
+    timeupdate: e => {
+        this.setState({ currentTime: this.audioElement.currentTime });
+    },
+    durationchange: e => {
+        this.setState({ duration: this.audioElement.duration });
+    },
+    volumechange: e => {
+        this.setState({ volume: this.audioElement.volume});
+    },
+
+    };
+    this.audioElement.addEventListener('timeupdate', this.eventListeners.timeupdate);    
+    this.audioElement.addEventListener('durationchange', this.eventListeners.durationchange);
+}
+
+    componentWillUnmount() {
+        this.audioElement.src = null;
+        this.audioElement.removeEventListeners('timeupdate', this.eventListeners.timeupdate);
+        this.audioElement.removeEventListeners('durationchange', this.eventListeners.durationchange);
+    }
+
 
   play() {
       this.audioElement.play();
@@ -65,6 +92,18 @@ class Album extends Component {
     console.log(this.state.album.songs.length);
 }
 
+   handleTimeChange(e) {
+    const newTime = this.audioElement.duration * e.target.value;
+    this.audioElement.currentTime = newTime;
+    this.setState({ currentTime: newTime });
+  }
+
+   handleVolumeChange(e) {
+       const newVolume = e.target.value;
+       this.audioElement.volume = newVolume;
+       this.setState({ volume: newVolume});
+   }
+
   handleOnMouseEnter(song) {
     this.setState({hoveredSong: song});
   }
@@ -96,6 +135,13 @@ class Album extends Component {
       }
     }
   }
+　
+  formatTime(e) {
+    const newMinute = Math.floor(e / 60) ;
+    const newSecond = Math.floor(e % 60) ;
+    const newTime = newMinute + ":" + newSecond;
+    return newTime;
+  }
 
   render() {
     return (
@@ -126,7 +172,7 @@ class Album extends Component {
                 > 
                     <td>{this.getTrackIcon(song, index)}</td>
                     <td>{song.title}</td>
-                    <td>{song.duration}</td>
+                    <td>{this.formatTime(song.duration)}</td>
                 </tr>
                    )
                }
@@ -136,9 +182,15 @@ class Album extends Component {
          <PlayerBar 
          isPlaying={this.state.isPlaying} 
          currentSong={this.state.currentSong} 
+         currentTime={this.audioElement.currentTime}
+         volume={this.audioElement.volume}
+         duration={this.audioElement.duration}
          handleSongClick={ () => this.handleSongClick(this.state.currentSong)}
          handlePrevClick={() => this.handlePrevClick()}
          handleNextClick={() => this.handleNextClick()}
+         handleTimeChange={(e) => this.handleTimeChange(e)}
+         handleVolumeChange={(e) => this.handleVolumeChange(e)}
+         formatTime={ (e) => this.formatTime(e) }
          />
       </section>
     );
