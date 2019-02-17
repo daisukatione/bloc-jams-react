@@ -140,7 +140,8 @@ class Album extends Component {
   formatTime(e) {
     const newMinute = Math.floor(e / 60) ;
     const newSecond = Math.floor(e % 60) ;
-    const newTime = newMinute + ":" + newSecond;
+    const colon = e < 10 ? ':0' : ':';
+    const newTime = newMinute + colon + newSecond;
     return newTime;
   }
 
