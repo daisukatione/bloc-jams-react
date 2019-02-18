@@ -1,0 +1,23 @@
+.Library {
+background-color: black;
+min-height: 100vh;
+display: flex;
+flex-wrap: wrap;
+justify-content: flex-start;
+}
+
+.Library a:link {
+    color: white;
+    text-decoration: none;
+    background-color: black;
+    margin: 5px 5px 5px 5px;
+  }
+
+.albumimage {
+width: 200px;
+}
+
+.albumtitle {
+    font-size: 20px;
+    font-style: italic;
+}

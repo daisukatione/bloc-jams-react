@@ -1,0 +1,33 @@
+.landing {
+display: flex;
+flex-direction: colomn;
+flex-wrap: wrap;
+align-content: flex-start;
+min-height: 100vh;
+background-color: black;
+color: white;
+}
+
+.hero-title {
+    margin: 0px 30px 0px 30px;
+    font-size: 200%;
+    color: yellow;
+    font-style: italic;
+}
+
+.selling-points {
+    display: flex;
+    margin: 0px 30px 0px 30px;
+    text-align: center;
+}
+
+.point-title {
+align-content: baseline;
+font-size: 170%;
+width: 
+}
+
+.point-description {
+    align-content: baseline;
+    font-size: 130%;
+}

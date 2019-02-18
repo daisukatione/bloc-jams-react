@@ -1,0 +1,4 @@
+.player-bar {
+    display: flex;
+    flex-direction: column;
+}
